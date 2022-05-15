@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View, Text } from "react-native";
 
-export default function Page2Screen() {
+export default function ApplicationScreen() {
    return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text style={{fontSize:16,fontWeight:'700'}}>Page2 Screen</Text>
+        <Text style={{fontSize:16,fontWeight:'700'}}>Application Screen</Text>
     </View>
    );
  }
