@@ -15,7 +15,7 @@ import ProfileScreen from './Profile';
 import LogScreen from './Log';
 import ChatroomScreen from './Chatroom'
 import ApplicationScreen from './Application'
-
+import EntryTimeScreen from './EntryTime'
 
 const Drawer = createDrawerNavigator();
 
@@ -69,6 +69,12 @@ export default function Dashboard({ navigation, route }) {
           ),
         }}/>
       <Drawer.Screen name="Application" component={ApplicationScreen} initialParams={{ studentID: studentID }}
+        options={{
+          drawerIcon: ({color}) => (
+            <AntDesign name="form" size={22} color={color} />
+          ),
+        }}/>
+      <Drawer.Screen name="EntryTime" component={EntryTimeScreen} initialParams={{ studentID: studentID }}
         options={{
           drawerIcon: ({color}) => (
             <AntDesign name="form" size={22} color={color} />
