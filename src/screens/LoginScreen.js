@@ -32,9 +32,9 @@ export default function LoginScreen({ navigation }) {
     const snapshot = await get(ref(db, 'account/' + ID.value));
     
     if(snapshot.exists()){
-      console.log("succesful");
+      // console.log("succesful");
       const pwd = snapshot.val().password;
-      console.log(pwd);
+      // console.log(pwd);
       if(password.value != pwd){
         console.log("password failed");
         setErrortype({value: "Incorrect password", show: 1});

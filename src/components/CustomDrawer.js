@@ -20,13 +20,13 @@ import '../../firebase'
 export default function CustomDrawer(props) {
   const studentID = props.state.routes[0].params["studentID"];
   const [name, setName] = useState('name');
-  console.log("CustomDrawer ", studentID)
+  // console.log("CustomDrawer ", studentID);
 
   const db = getDatabase();
   const reference = ref(db, `account/${studentID}`);
   onValue(reference, async (snapshot) => {
     const _name = await snapshot.val().name;
-    console.log("succesful, ", _name);
+    // console.log("succesful, ", _name);
     setName(_name);
   });
 
