@@ -4,15 +4,15 @@ import { collection, addDoc, getDocs, query, orderBy, onSnapshot } from 'firebas
 import { db } from '../../firebase'
 import { getDatabase, ref, onValue, once, get, set, push } from 'firebase/database';
 
-export default function ChatroomScreen({ navigation, route }) {
+export default function LogScreen({ navigation, route }) {
   const [messages, setMessages] = useState([]);
   const {studentID} = route.params;
   const dbr = getDatabase();
   const reference = ref(dbr, 'account/' + studentID);
   let nickname;
-  get(reference, async (snapshot) => {
+  onValue(reference, async (snapshot) => {
     nickname = await snapshot.val().nickname;
-    console.log("typeof: " + typeof nickname);
+    console.log("succesful: " + nickname);
   });
 
   useLayoutEffect(() => {
@@ -45,7 +45,7 @@ export default function ChatroomScreen({ navigation, route }) {
           onSend={messages => onSend(messages)}
           user={{
               _id: studentID,
-              name: String(nickname),
+              name: nickname,
               avatar: "https://placeimg.com/140/140/any"
           }}
       />
