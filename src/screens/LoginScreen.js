@@ -5,7 +5,7 @@ import Background from '../components/Background'
 import Logo from '../components/Logo'
 import Header from '../components/Header'
 import Button from '../components/Button'
-import TextInput from '../components/TextInput'
+import MyTextInput from '../components/TextInput'
 import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
 import { IDValidator } from '../helpers/IDValidator'
@@ -66,7 +66,7 @@ export default function LoginScreen({ navigation }) {
       {/* <BackButton goBack={navigation.goBack} /> */}
       {/* <Logo /> */}
       <Header>Welcome back.</Header>
-      <TextInput
+      <MyTextInput
         label="StudentID"
         returnKeyType="next"
         value={ID.value}
@@ -78,7 +78,7 @@ export default function LoginScreen({ navigation }) {
         textContentType="username"
         keyboardType="numeric"
       />
-      <TextInput
+      <MyTextInput
         label="Password"
         returnKeyType="done"
         value={password.value}
