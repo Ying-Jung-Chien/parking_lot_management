@@ -294,6 +294,7 @@ export default function ProfileScreen({route}) {
             <TextInput
               placeholder={nickName}
               placeholderTextColor="#666666"
+              returnKeyType="done"
               autoCorrect={false}
               style={[
                 styles.textInput,
@@ -310,6 +311,7 @@ export default function ProfileScreen({route}) {
               placeholder={phone}
               placeholderTextColor="#666666"
               keyboardType="default"
+              returnKeyType="done"
               autoCorrect={false}
               style={[
                 styles.textInput,
@@ -326,6 +328,7 @@ export default function ProfileScreen({route}) {
               placeholder={email}
               placeholderTextColor="#666666"
               keyboardType="email-address"
+              returnKeyType="done"
               autoCorrect={false}
               style={[
                 styles.textInput,
