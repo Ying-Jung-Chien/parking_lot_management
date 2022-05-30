@@ -20,15 +20,17 @@ import Feather from 'react-native-vector-icons/Feather';
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import Modal from "react-native-modal";
+import * as ImagePicker from 'expo-image-picker';
 
 import { getDatabase, ref, onValue, once, get, child, update } from 'firebase/database';
+import { getStorage, storage, uploadBytes, getDownloadURL, uploadBytesResumable  } from "firebase/storage";
+import { ref as sRef } from 'firebase/storage';
 import '../../firebase'
 import { passwordValidator } from '../helpers/passwordValidator'
 import { oldPasswordValidator } from '../helpers/oldPasswordValidator'
 import { confirmPasswordValidator } from '../helpers/confirmPasswordValidator'
 import MyTextInput from '../components/TextInput'
 
-// import ImagePicker from 'react-native-image-crop-picker';
 
 export default function ProfileScreen({route}) {
   const {studentID} = route.params;
@@ -39,11 +41,14 @@ export default function ProfileScreen({route}) {
   const [license, setLicense] = useState('license');
   const [email, setEmail] = useState('email');
   const [phone, setPhone] = useState('phone');
-  const [image, setImage] = useState('../assets/user-profile.jpg');
+  const [image, setImage] = useState('https://firebasestorage.googleapis.com/v0/b/parking-lot-management-5116b.appspot.com/o/avatar%2Fnull.jpg?alt=media&token=43c797de-0439-4103-9083-249fc138c885');
   const [visible, setVisible] = useState(false);
   const [oldPassword, setOldPassword] = useState({ value: '', error: '' });
   const [newPassword, setNewPassword] = useState({ value: '', error: '' });
   const [confirmPassword, setConfirmPassword] = useState({ value: '', error: '' });
+
+  const bs = React.createRef();
+  const fall = new Animated.Value(1);
   
 
   const db = getDatabase();
@@ -55,6 +60,7 @@ export default function ProfileScreen({route}) {
     const _license = await snapshot.val().license;
     const _email = await snapshot.val().email;
     const _phone = await snapshot.val().phone;
+    const _avatar = await snapshot.val().avatar;
     // console.log("succesful, ", _name);
     setName(_name);
     setPassword(_password);
@@ -62,6 +68,7 @@ export default function ProfileScreen({route}) {
     setLicense(_license);
     setEmail(_email);
     setPhone(_phone);
+    if(_avatar) setImage(_avatar);
   });
 
   const handleNickname = (text) => {
@@ -163,31 +170,108 @@ export default function ProfileScreen({route}) {
     
   }
 
-  // const takePhotoFromCamera = () => {
-  //   ImagePicker.openCamera({
-  //     compressImageMaxWidth: 300,
-  //     compressImageMaxHeight: 300,
-  //     cropping: true,
-  //     compressImageQuality: 0.7
-  //   }).then(image => {
-  //     console.log(image);
-  //     setImage(image.path);
-  //     this.bs.current.snapTo(1);
-  //   });
-  // }
+  uploadImage = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
 
-  // const choosePhotoFromLibrary = () => {
-  //   ImagePicker.openPicker({
-  //     width: 300,
-  //     height: 300,
-  //     cropping: true,
-  //     compressImageQuality: 0.7
-  //   }).then(image => {
-  //     console.log(image);
-  //     setImage(image.path);
-  //     this.bs.current.snapTo(1);
-  //   });
-  // }
+    const _storage = getStorage();
+    const storageRef = sRef(_storage, `avatar/${studentID}.jpg`);
+
+    const uploadTask = uploadBytesResumable(storageRef, blob);
+
+    uploadTask.on('state_changed', 
+      (snapshot) => {
+        // Observe state change events such as progress, pause, and resume
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+        switch (snapshot.state) {
+          case 'paused':
+            console.log('Upload is paused');
+            break;
+          case 'running':
+            console.log('Upload is running');
+            break;
+        }
+      }, 
+      (error) => {
+        // Handle unsuccessful uploads
+      }, 
+      () => {
+        // Handle successful uploads on complete
+        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+        getDownloadURL(storageRef).then((downloadURL) => {
+          console.log('File available at', downloadURL);
+          const updates = {};
+          updates['/avatar'] = downloadURL;
+
+          update(reference, updates)
+          .then(() => {
+            alert("Successfully changed avatar");
+          })
+          .catch((error) => {
+            alert("Failed to change avatar");
+          });
+        });
+      }
+    );
+}
+
+  const pickImageFromCamera = async () => {
+    let permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    if (permissionResult.granted === false) {
+      alert('Permission to access camera is required!');
+      return;
+    }
+
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+      uploadImage(result.uri);
+    }
+    
+  };
+
+  const pickImageFromLibrary = async () => {
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
+      alert('Permission to access camera roll is required!');
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+      uploadImage(result.uri);
+    }
+    
+  };
+
+  const takePhotoFromCamera = () => {
+    pickImageFromCamera();
+    bs.current.snapTo(1);
+  }
+
+  const choosePhotoFromLibrary = () => {
+    pickImageFromLibrary();
+    bs.current.snapTo(1);
+  }
 
   const renderInner = () => (
     <View style={styles.panel}>
@@ -195,10 +279,10 @@ export default function ProfileScreen({route}) {
         <Text style={styles.panelTitle}>Upload Photo</Text>
         <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
       </View>
-      <TouchableOpacity style={styles.panelButton} onPress={() => {/*takePhotoFromCamera*/}}>
+      <TouchableOpacity style={styles.panelButton} onPress={() => takePhotoFromCamera()}>
         <Text style={styles.panelButtonTitle}>Take Photo</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.panelButton} onPress={() => {/*choosePhotoFromLibrary*/}}>
+      <TouchableOpacity style={styles.panelButton} onPress={() => choosePhotoFromLibrary()}>
         <Text style={styles.panelButtonTitle}>Choose From Library</Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -217,8 +301,7 @@ export default function ProfileScreen({route}) {
     </View>
   );
 
-  const bs = React.createRef();
-  const fall = new Animated.Value(1);
+  
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
