@@ -7,16 +7,9 @@ import { getDatabase, ref, onValue, once, get, set, push } from 'firebase/databa
 export default function ChatroomScreen({ navigation, route }) {
   const [messages, setMessages] = useState([]);
   const {studentID} = route.params;
-  const dbr = getDatabase();
-  const reference = ref(dbr, 'account/' + studentID);
-  let nickname;
-  get(reference, async (snapshot) => {
-    nickname = await snapshot.val().nickname;
-    console.log("typeof: " + typeof nickname);
-  });
 
   useLayoutEffect(() => {
-    const q = query(collection(db, 'chats'), orderBy('createdAt', 'desc'));
+    const q = query(collection(db, studentID), orderBy('createdAt', 'desc'));
     const unsubscribe = onSnapshot(q, (snapshot) => setMessages(
         snapshot.docs.map(doc => ({
             _id: doc.data()._id,
@@ -42,10 +35,12 @@ export default function ChatroomScreen({ navigation, route }) {
       <GiftedChat
           messages={messages}
           showAvatarForEveryMessage={true}
+          // renderUsernameOnMessage={true}
+          renderInputToolbar={() => null}
           onSend={messages => onSend(messages)}
           user={{
               _id: studentID,
-              name: String(nickname),
+              name: studentID,
               avatar: "https://placeimg.com/140/140/any"
           }}
       />

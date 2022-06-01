@@ -14,6 +14,7 @@ import HomeScreen from './Home';
 import ProfileScreen from './Profile';
 import LogScreen from './Log';
 import ChatroomScreen from './Chatroom'
+import ChatroomScreen2 from './Chatroom_2'
 import ApplicationScreen from './Application'
 import EntryTimeScreen from './EntryTime'
 
@@ -62,12 +63,18 @@ export default function Dashboard({ navigation, route }) {
             <AntDesign name="filetext1" size={22} color={color} />
           ),
         }}/>
-      <Drawer.Screen name="Chatroom" component={ChatroomScreen} initialParams={{ studentID: studentID }}
-        options={{
-          drawerIcon: ({color}) => (
-            <Ionicons name="chatbox-ellipses-outline" size={22} color={color} />
-          ),
-        }}/>
+        <Drawer.Screen name="MessageBoard" component={ChatroomScreen} initialParams={{ studentID: studentID }}
+          options={{
+            drawerIcon: ({color}) => (
+              <Ionicons name="chatbox-ellipses-outline" size={22} color={color} />
+            ),
+          }}/>
+          <Drawer.Screen name="SendMessage" component={ChatroomScreen2} initialParams={{ studentID: studentID }}
+            options={{
+              drawerIcon: ({color}) => (
+                <Ionicons name="chatbox-ellipses-outline" size={22} color={color} />
+              ),
+            }}/>
       <Drawer.Screen name="Application" component={ApplicationScreen} initialParams={{ studentID: studentID }}
         options={{
           drawerIcon: ({color}) => (
