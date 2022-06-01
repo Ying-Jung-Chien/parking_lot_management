@@ -35,7 +35,7 @@ export default function ChatroomScreen({ navigation, route }) {
       <GiftedChat
           messages={messages}
           showAvatarForEveryMessage={true}
-          // renderUsernameOnMessage={true}
+          renderUsernameOnMessage={true}
           renderInputToolbar={() => null}
           onSend={messages => onSend(messages)}
           user={{

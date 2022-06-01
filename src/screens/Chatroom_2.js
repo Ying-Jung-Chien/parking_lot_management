@@ -14,16 +14,24 @@ import { db } from '../../firebase'
 import { getDatabase, ref, onValue, once, get, set, push } from 'firebase/database';
 
 export default function ChatroomScreen2({navigation, route}) {
-  const [fdlicense, setFdlicense] = useState({ value: '', error: '' })
+  const [fdlicense, setFdlicense] = useState({ value: '', error: '' });
   const [messages, setMessages] = useState({ value: '', error: '' });
   const [errortype, setErrortype] = useState({ value: "", show: 0});
+  const [nickName, setNickName] = useState('nickName');
   const {studentID} = route.params;
   const dbr = getDatabase();
   const reference = ref(dbr, 'account/');
   
+  const myreference = ref(dbr, `account/${studentID}`);
+  onValue(myreference, async (snapshot) => {
+    const _nickName = await snapshot.val().nickname;
+    // console.log("succesful, ", _name);
+    setNickName(_nickName);
+  });
+
   const user={
     _id: studentID,
-    name: studentID,
+    name: nickName,
     avatar: "https://placeimg.com/140/140/any"
   };
 
@@ -33,7 +41,7 @@ export default function ChatroomScreen2({navigation, route}) {
       snapshot.forEach(function(childSnapshot) {
         // childData will be the actual contents of the child
         var childData = childSnapshot.val();
-        console.log("childData.license=",childData.license,",fdlicense=",fdlicense,"result=",childData.license == fdlicense);
+        // console.log("childData.license=",childData.license,",fdlicense=",fdlicense,"result=",childData.license == fdlicense);
         if(childData.license == fdlicense.value){
           fdid = childSnapshot.key;
           console.log(fdid);
