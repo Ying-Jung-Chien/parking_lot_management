@@ -37,9 +37,10 @@ export default function ChatroomScreen2({navigation, route}) {
         if(childData.license == fdlicense.value){
           fdid = childSnapshot.key;
           console.log(fdid);
+          const t = new Date();
           const newData={
-            _id: studentID,
-            createdAt: new Date(),
+            _id: t.getTime(),
+            createdAt: t,
             text: messages.value,
             user: user
           };
