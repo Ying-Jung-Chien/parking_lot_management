@@ -20,14 +20,16 @@ import '../../firebase'
 export default function CustomDrawer(props) {
   const studentID = props.state.routes[0].params["studentID"];
   const [name, setName] = useState('name');
-  // console.log("CustomDrawer ", studentID);
+  const [image, setImage] = useState('https://firebasestorage.googleapis.com/v0/b/parking-lot-management-5116b.appspot.com/o/avatar%2Fnull.jpg?alt=media&token=43c797de-0439-4103-9083-249fc138c885');
+  
 
   const db = getDatabase();
   const reference = ref(db, `account/${studentID}`);
   onValue(reference, async (snapshot) => {
     const _name = await snapshot.val().name;
-    // console.log("succesful, ", _name);
+    const _avatar = await snapshot.val().avatar;
     setName(_name);
+    if(_avatar) setImage(_avatar);
   });
 
   return (
@@ -39,7 +41,7 @@ export default function CustomDrawer(props) {
           source={require('../assets/menu-bg.jpeg')}
           style={{padding: 20}}>
           <Image
-            source={require('../assets/user-profile.jpg')}
+            source={{uri: image,}}
             style={{height: 80, width: 80, borderRadius: 40, marginBottom: 10}}
           />
           <Text
