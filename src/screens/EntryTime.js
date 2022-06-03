@@ -24,29 +24,25 @@ export default function EntryTimeScreen ({ route, navigation }) {
     onValue(inoutref, (snapshot) => {
       get(child(dbRef, 'account/' + studentID+'/license')).then((snapshot) => {
         if (snapshot.exists()) {
-          console.log("hehe",snapshot.val());
           var license='';
           var lic;
           license = snapshot.val();
           lic = license.replace(/-/, '');
           const entry = ref(db, 'License plates/' + lic);
-          onValue(entry, (snapshot) => {
-           
-                var childData=snapshot.val();
+          onValue(entry, (e) => {
+            if (e.exists()) {
+                var childData=e.val();
 
                 const items = Object.values(childData);
                 setItemsArray(items);
-
-               // console.log(element.key);
-               // console.log("inout",childData.enter);
-               // console.log("time",childData.time);
+            }
           
          });
         } else {
           console.log("No data available");
         }
         }).catch((error) => {
-          console.error(error);
+          console.log("No data available");
         });
    });
       
@@ -63,7 +59,7 @@ export default function EntryTimeScreen ({ route, navigation }) {
         itemsArray.length > 0 ? (
           <ItemComponent items={itemsArray} />
         ) : (
-          <Text>No items</Text>
+          <Text>No data available</Text>
         )
         
       }
