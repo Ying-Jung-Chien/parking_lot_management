@@ -393,7 +393,7 @@ export default function ProfileScreen({route}) {
             <TextInput
               placeholder={phone}
               placeholderTextColor="#666666"
-              keyboardType="default"
+              keyboardType="numeric"
               returnKeyType="done"
               autoCorrect={false}
               style={[
