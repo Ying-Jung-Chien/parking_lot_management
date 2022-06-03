@@ -5,17 +5,39 @@ import Logo from '../components/Logo'
 import Header from '../components/Header'
 import TextInput from '../components/TextInput'
 import Button from '../components/Button'
-import { emailValidator } from '../helpers/emailValidator'
+
+import { getDatabase, ref, onValue, update, get } from 'firebase/database';
+import '../../firebase'
 
 export default function ResetPasswordScreen({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' })
+  const [ID, setID] = useState({ value: '', error: '' })
 
-  const sendResetPasswordEmail = () => {
-    const emailError = emailValidator(email.value)
-    if (emailError) {
-      setEmail({ ...email, error: emailError })
-      return
-    }
+  const resetPassword = async () => {
+    const db = getDatabase();
+    const snapshot = await get(ref(db, 'account/' + ID.value));
+    
+    if(snapshot.exists()){
+      const original = await snapshot.val().original;
+      const reference = ref(db, 'account/' + ID.value);
+      const updates = {};
+      updates['/password'] = original;
+
+      update(reference, updates)
+      .then(() => {
+        alert("Successfully reset password");
+      })
+      .catch((error) => {
+        alert("Failed to reset password");
+      });
+    } 
+    else{
+      console.log("ID failed");
+      setErrortype({value: "this student id doesn't exist", show: 1});
+      return;
+    } 
+
+    
     navigation.navigate('LoginScreen')
   }
 
@@ -25,24 +47,24 @@ export default function ResetPasswordScreen({ navigation }) {
       {/* <Logo /> */}
       <Header>Restore Password</Header>
       <TextInput
-        label="E-mail address"
+        label="Student ID"
         returnKeyType="done"
-        value={email.value}
-        onChangeText={(text) => setEmail({ value: text, error: '' })}
-        error={!!email.error}
-        errorText={email.error}
+        value={ID.value}
+        onChangeText={(text) => setID({ value: text, error: '' })}
+        error={!!ID.error}
+        errorText={ID.error}
         autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
-        description="You will receive email with password reset link."
+        autoCompleteType="username"
+        textContentType="username"
+        keyboardType="numeric"
+        description="The password will be reset to the default: the last 4 digits of ID No. + your birthday(MMDD)."
       />
       <Button
         mode="contained"
-        onPress={sendResetPasswordEmail}
+        onPress={resetPassword}
         style={{ marginTop: 16 }}
       >
-        Send Instructions
+        Reset Password
       </Button>
     </Background>
   )
