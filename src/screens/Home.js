@@ -18,7 +18,6 @@ export default function HomeScreen({route}) {
   const db = getDatabase();
   const reference = ref(db, 'account/' + "108010013");
   var nickname;
- 
 
   const entry = ref(db, 'License plates/');
   
@@ -65,30 +64,40 @@ export default function HomeScreen({route}) {
         num = num+1;
       }
       //setcount_car(num)
-      console.log(obj)
+      //console.log(obj)
      });
-     console.log("number",num);
+     //console.log("number",num);
      setcount_car({value:num})
-     console.log(count_car.value)
+     //console.log(count_car.value)
      get(child(dbRef,'account/' + studentID+'/license')).then((snapshot) => {
       if (snapshot.exists()) {
         const pwd = snapshot.val();
-       // const licesen = snapshot.val().license;
-        console.log("pwd",pwd);
+        const licesen = snapshot.val().license;
+        //console.log("pwd",pwd);
         setLicenseNumber({value:pwd})
         const pos = ref(db, 'position/' );
         setOwnCar({value:1})
         get(child(dbRef,'position/' + pwd)).then((snapshot) => {
-          console.log("snapshot",snapshot.val());
-          setPos({value:snapshot.val()})
-          if(snapshot.val()=='in'){
-            setinput({value:1})
+          if(snapshot.exists()){
+            //console.log("snapshot",snapshot.val());
+            setPos({value:snapshot.val()})
+            if(snapshot.val()=='in'){
+              setinput({value:1})
+            }
+            else{
+              setinput({value:0})
+            }
           }
           else{
             setinput({value:0})
+            set(ref(db, 'position/' +pwd), 'out');
           }
+          
         })
-        //setOwnCar({value:1})
+        setOwnCar({value:1})
+      }
+      else{
+        setOwnCar({value:0})
       }
     }).catch((error) => {
       setOwnCar({value:0})
@@ -106,22 +115,34 @@ export default function HomeScreen({route}) {
     setinput({value:0})
   }
 
-  
+  const rendeposition = () => {
+    if (OwnCar.value==1) {
+      if(input.value==1){
+        return [<TextInput
+          label="Position"
+          returnKeyType="done"
+          value={Pos.value}
+          onChangeText={(text) => setPos({ value: text})}
+        />,
+        
+        <Button mode="contained" onPress={onApplyPressed}>
+          Enter
+        </Button>];
+      }
+      else{
+        return <Text style={{fontSize:16,fontWeight:'700'}}>Position: {Pos.value}</Text>;
+            
+      }
+    } else {
+      return <Text style={{fontSize:16,fontWeight:'700'}}>No car</Text>;
+    }
+  }
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text style={{fontSize:16,fontWeight:'700'}}>Home Screen</Text>
         {<Text style={{fontSize:16,fontWeight:'700'}}>available: {space-count_car.value}</Text>}
 
-        {input.value == 1?[<TextInput
-        label="Position"
-        returnKeyType="done"
-        value={Pos.value}
-        onChangeText={(text) => setPos({ value: text})}
-      />,
-      
-      <Button mode="contained" onPress={onApplyPressed}>
-        Enter
-      </Button>]:(<Text style={{fontSize:16,fontWeight:'700'}}>Position: {Pos.value}</Text>)}
+        {rendeposition()}
         
         
     </View>
