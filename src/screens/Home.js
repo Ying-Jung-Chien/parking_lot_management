@@ -73,28 +73,34 @@ export default function HomeScreen({route}) {
       if (snapshot.exists()) {
         const pwd = snapshot.val();
         const licesen = snapshot.val().license;
-        //console.log("pwd",pwd);
+        console.log("pwd",pwd);
         setLicenseNumber({value:pwd})
         const pos = ref(db, 'position/' );
         setOwnCar({value:1})
-        get(child(dbRef,'position/' + pwd)).then((snapshot) => {
-          if(snapshot.exists()){
-            //console.log("snapshot",snapshot.val());
-            setPos({value:snapshot.val()})
-            if(snapshot.val()=='in'){
-              setinput({value:1})
+        if(pwd!=""){
+          get(child(dbRef,'position/' + pwd)).then((snapshot) => {
+            if(snapshot.exists()){
+              //console.log("snapshot",snapshot.val());
+              setPos({value:snapshot.val()})
+              if(snapshot.val()=='in'){
+                setinput({value:1})
+              }
+              else{
+                setinput({value:0})
+              }
             }
             else{
               setinput({value:0})
+              set(ref(db, 'position/' +pwd), 'out');
             }
-          }
-          else{
-            setinput({value:0})
-            set(ref(db, 'position/' +pwd), 'out');
-          }
-          
-        })
-        setOwnCar({value:1})
+            
+          })
+          setOwnCar({value:1})
+        }
+        else{
+          setOwnCar({value:0})
+        }
+        
       }
       else{
         setOwnCar({value:0})

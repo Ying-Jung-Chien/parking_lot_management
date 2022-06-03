@@ -103,6 +103,7 @@ export default function ApplicationScreen({ route, navigation }) {
         label="Phone Number"
         returnKeyType="next"
         key="phone"
+        keyboardType="numeric"
         value={PhoneNumber.value}
         onChangeText={(text) => setPhoneNumber({ value: text, error: '' })}
       />,
@@ -116,7 +117,7 @@ export default function ApplicationScreen({ route, navigation }) {
        <TextInput
         key="license"
         label="LicenseNumber"
-        returnKeyType="next"
+        returnKeyType="done"
         value={LicenseNumber.value}
         onChangeText={(text) => setLicenseNumber({ value: text, error: '' })}
       />,
