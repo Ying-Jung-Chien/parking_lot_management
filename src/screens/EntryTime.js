@@ -29,15 +29,21 @@ export default function EntryTimeScreen ({ route, navigation }) {
           license = snapshot.val();
           lic = license.replace(/-/, '');
           const entry = ref(db, 'License plates/' + lic);
-          onValue(entry, (e) => {
-            if (e.exists()) {
-                var childData=e.val();
-
-                const items = Object.values(childData);
-                setItemsArray(items);
-            }
+          if(lic!=""){
+            onValue(entry, (e) => {
+              if (e.exists()) {
+                  var childData=e.val();
+  
+                  const items = Object.values(childData);
+                  setItemsArray(items);
+              }
+            
+           });
+          }
+          else{
+            console.log("No data available");
+          }
           
-         });
         } else {
           console.log("No data available");
         }

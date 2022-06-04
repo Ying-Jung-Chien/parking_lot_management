@@ -28,25 +28,19 @@ export default function ApplicationScreen({ route, navigation }) {
   const [LicenseNumber, setLicenseNumber] = useState({ value: '', error: '' })
 
   const [errortype, setErrortype] = useState({ value: "", show: 0});
-  //console.log("ID",studentID);
-  //get(child(dbRef, 'account/' + studentID+'/license'))
+  
   React.useEffect(() => {
     get(child(dbRef,'account/' + studentID+'/license')).then((snapshot) => {
       if (snapshot.exists()) {
         const pwd = snapshot.val();
-        const licesen = snapshot.val().license;
-        //console.log(pwd)
-        
-        setdone(1)
+        //console.log("lic",pwd)
+        if(pwd!="")setdone(1)
+        else setdone(0)
       }
     }).catch((error) => {
       get(child(dbRef,'apply_data/' + studentID)).then((snapshot) => {
-        if (snapshot.exists()) {
-          const pwd = snapshot.val();
-          //console.log(pwd)
-          
-          setdone(1)
-        }
+        if (snapshot.exists()) setdone(1)
+        else setdone(0)
       }).catch((error) => {
         setdone(0)
         console.log("No dataa available");
