@@ -10,6 +10,8 @@ import {
   ResetPasswordScreen,
   Dashboard,
 } from './src/screens'
+import { LogBox } from 'react-native';
+LogBox.ignoreAllLogs(); // disable warnings
 
 const Stack = createStackNavigator()
 

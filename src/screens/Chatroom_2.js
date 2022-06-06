@@ -18,6 +18,7 @@ export default function ChatroomScreen2({navigation, route}) {
   const [messages, setMessages] = useState({ value: '', error: '' });
   const [errortype, setErrortype] = useState({ value: "", show: 0});
   const [nickName, setNickName] = useState('nickName');
+  const [avatar, setAvatar] = useState('avatar');
   const {studentID} = route.params;
   const dbr = getDatabase();
   const reference = ref(dbr, 'account/');
@@ -25,14 +26,16 @@ export default function ChatroomScreen2({navigation, route}) {
   const myreference = ref(dbr, `account/${studentID}`);
   onValue(myreference, async (snapshot) => {
     const _nickName = await snapshot.val().nickname;
-    // console.log("succesful, ", _name);
     setNickName(_nickName);
+    const _avatar = await snapshot.val().avatar;
+    if(_avatar == "") setAvatar("https://placeimg.com/140/140/any");
+    else setAvatar(_avatar);
   });
 
   const user={
     _id: studentID,
     name: nickName,
-    avatar: "https://placeimg.com/140/140/any"
+    avatar: avatar
   };
 
   const onSend = () => {
@@ -42,7 +45,7 @@ export default function ChatroomScreen2({navigation, route}) {
         // childData will be the actual contents of the child
         var childData = childSnapshot.val();
         // console.log("childData.license=",childData.license,",fdlicense=",fdlicense,"result=",childData.license == fdlicense);
-        if(childData.license == fdlicense.value){
+        if(childData.license.toLowerCase() == fdlicense.value){
           fdid = childSnapshot.key;
           console.log(fdid);
           const t = new Date();
@@ -74,7 +77,7 @@ export default function ChatroomScreen2({navigation, route}) {
         label="License Number"
         returnKeyType="next"
         value={fdlicense.value}
-        onChangeText={(text) => setFdlicense({ value: text.replace(/[^a-z0-9]/gi,''), error: '' })}
+        onChangeText={(text) => setFdlicense({ value: text.replace(/[^a-z0-9]/gi,'').toLowerCase(), error: '' })}
         error={!!fdlicense.error}
         errorText={fdlicense.error}
       />
