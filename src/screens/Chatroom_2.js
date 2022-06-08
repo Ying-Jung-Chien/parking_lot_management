@@ -28,7 +28,7 @@ export default function ChatroomScreen2({navigation, route}) {
     const _nickName = await snapshot.val().nickname;
     setNickName(_nickName);
     const _avatar = await snapshot.val().avatar;
-    if(_avatar == "") setAvatar("https://placeimg.com/140/140/any");
+    if(_avatar == "") setAvatar("https://firebasestorage.googleapis.com/v0/b/parking-lot-management-5116b.appspot.com/o/avatar%2Fnull.jpg?alt=media&token=43c797de-0439-4103-9083-249fc138c885"); // https://placeimg.com/140/140/any
     else setAvatar(_avatar);
   });
 
