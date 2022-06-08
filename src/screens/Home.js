@@ -63,31 +63,20 @@ export default function HomeScreen({route}) {
       if(obj!='out'){
         num = num+1;
       }
-      //setcount_car(num)
-      //console.log(obj)
      });
-     //console.log("number",num);
      setcount_car({value:num})
-     //console.log(count_car.value)
      get(child(dbRef,'account/' + studentID+'/license')).then((snapshot) => {
       if (snapshot.exists()) {
         const pwd = snapshot.val();
-        const licesen = snapshot.val().license;
-        console.log("pwd",pwd);
         setLicenseNumber({value:pwd})
-        const pos = ref(db, 'position/' );
         setOwnCar({value:1})
         if(pwd!=""){
           get(child(dbRef,'position/' + pwd)).then((snapshot) => {
             if(snapshot.exists()){
               //console.log("snapshot",snapshot.val());
               setPos({value:snapshot.val()})
-              if(snapshot.val()=='in'){
-                setinput({value:1})
-              }
-              else{
-                setinput({value:0})
-              }
+              if(snapshot.val()=='in')setinput({value:1})
+              else setinput({value:0})
             }
             else{
               setinput({value:0})
@@ -107,7 +96,6 @@ export default function HomeScreen({route}) {
       }
     }).catch((error) => {
       setOwnCar({value:0})
-      //setOwnCar({value:0})
     });
   });
   const dbRef = ref(getDatabase());
@@ -115,7 +103,6 @@ export default function HomeScreen({route}) {
   }, []);
   
   const onApplyPressed = async () => {
-
     const db = getDatabase();
     set(ref(db, 'position/'+License.value), Pos.value);
     setinput({value:0})
@@ -143,14 +130,12 @@ export default function HomeScreen({route}) {
       return <Text style={{fontSize:16,fontWeight:'700'}}>No car</Text>;
     }
   }
+
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text style={{fontSize:16,fontWeight:'700'}}>Home Screen</Text>
         {<Text style={{fontSize:16,fontWeight:'700'}}>available: {space-count_car.value}</Text>}
-
         {rendeposition()}
-        
-        
     </View>
   );
  }

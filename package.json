@@ -42,9 +42,12 @@
     "react-native-screens": "~3.11.1",
     "react-native-status-bar-height": "^2.6.0",
     "react-native-tab-view": "^3.0.0",
+    "react-native-table-component": "^1.2.2",
     "react-native-vector-icons": "^9.1.0",
     "react-native-web": "0.17.7",
-    "reanimated-bottom-sheet": "^1.0.0-alpha.22"
+    "reanimated-bottom-sheet": "^1.0.0-alpha.22",
+    "webpack-dev-server": "~3.11.0",
+    "@expo/webpack-config": "~0.16.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
