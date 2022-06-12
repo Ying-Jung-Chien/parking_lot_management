@@ -2,9 +2,12 @@ import * as React from 'react';
 import { useState, createContext, useContext } from 'react'
 import { View, Text } from "react-native";
 import Button from '../components/Button'
+import Background from '../components/Background'
+import Header from '../components/Header'
 import TextInput from '../components/TextInput'
 import { getDatabase, ref, onValue,get,child ,set} from 'firebase/database';
 import '../../firebase'
+import { theme } from '../core/theme'
 
 var space = 100;
 export default function HomeScreen({route}) {
@@ -16,8 +19,6 @@ export default function HomeScreen({route}) {
   const [License, setLicenseNumber] = useState({ value: ''})
   // console.log("studentID : ", studentID);
   const db = getDatabase();
-  const reference = ref(db, 'account/' + "108010013");
-  var nickname;
 
   const entry = ref(db, 'License plates/');
   
@@ -123,19 +124,23 @@ export default function HomeScreen({route}) {
         </Button>];
       }
       else{
-        return <Text style={{fontSize:16,fontWeight:'700'}}>Position: {Pos.value}</Text>;
+        return <Header>Position: {Pos.value}</Header>;
             
       }
     } else {
-      return <Text style={{fontSize:16,fontWeight:'700'}}>No car</Text>;
+      return <Header>No car</Header>;
     }
   }
 
   return (
+    
+    <Background>
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text style={{fontSize:16,fontWeight:'700'}}>Home Screen</Text>
-        {<Text style={{fontSize:16,fontWeight:'700'}}>available: {space-count_car.value}</Text>}
+      <Header>Available: {space-count_car.value}</Header>
+        
         {rendeposition()}
     </View>
+    </Background>
+   
   );
  }

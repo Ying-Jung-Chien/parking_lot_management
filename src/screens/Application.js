@@ -118,7 +118,7 @@ export default function ApplicationScreen({ route, navigation }) {
       
       <Button mode="contained" key="apply" onPress={onApplyPressed}>
         Apply
-      </Button>]:(<Text>done apply</Text>)
+      </Button>]:(<Text  style={styles.link}>DONE APPLY</Text>)
 }
     </Background>
   )
@@ -136,10 +136,12 @@ const styles = StyleSheet.create({
   },
   forgot: {
     fontSize: 13,
-    color: theme.colors.secondary,
+    color: theme.colors.primary,
   },
   link: {
     fontWeight: 'bold',
-    color: theme.colors.primary,
+    fontSize: 26,
+    
+    color:  '#808080',
   },
 })
