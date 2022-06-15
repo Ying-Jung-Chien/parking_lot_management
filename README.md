@@ -1,4 +1,4 @@
-# parking_lot_management
+# Parking Lot Management Project
 ## The introduction about the project
 We combine a cloud AI model and database to build an app, a parking lot management tool. The app features a variety of functions, including displaying the record of vehicles entering and exiting the parking lot, sending messages to other users, reading messages from other users, and checking the validation of vehicle permission. Therefore, this app can greatly reduce the manpower spent on managing parking lots and increase the efficiency of management.
 
